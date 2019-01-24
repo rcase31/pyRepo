@@ -5,7 +5,7 @@ Class created to easily work with CSV files.
 
 
 class MyCSVManager:
-    working_directory = "C:/Users/rafae/Desktop"
+    working_directory = "C:/Users/rafae/Desktop/"
     delimiter = ','
     all_lines = []
 
@@ -16,8 +16,8 @@ class MyCSVManager:
         pass
 
     def open(self, file_name) -> list:
-        with open(self._working_directory + file_name, errors='ignore') as \
-                csv_file:
+        with open(self.working_directory + file_name + '.csv',
+                  errors='ignore') as csv_file:
             self.all_lines = csv_file.readlines()
             # Just in case the file is semicolon separated
             if ';' in self.all_lines[0]:
@@ -26,6 +26,7 @@ class MyCSVManager:
             return self.all_lines
 
     def save_lines(self, file_name):
-        with open(file_name + '.csv', mode='w') as out_file:
+        with open(self.working_directory + file_name + '.csv', mode='w') as \
+                out_file:
             for line in self.all_lines:
                 out_file.write(self.delimiter.join(line))

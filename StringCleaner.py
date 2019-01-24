@@ -20,7 +20,7 @@ def clean_str(my_str):
 
     my_str = my_str.lower()
     my_str = my_str.replace("  ", " ").strip()
-    my_str = unidecode.unidecode(my_str)
+    my_str = unidecode(my_str)
 
     my_str = re.sub(r'\001', '', my_str)
     my_str = re.sub(r"[^A-Za-z0-9///' ]", '', my_str)
