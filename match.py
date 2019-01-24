@@ -30,12 +30,13 @@ def del_prepositions(lst) -> list:
         >>> del_prepositions(['a','porque','per','jamais'])
         ['porque', 'jamais']
     """
-    paltries = 'a,ante,após,até,com,contra,para,per,perante,por'.split(',')
+    prep_list = 'a,ante,após,até,com,contra,de,desde,em,entre,para,perante,' \
+                'por,sem,sob,sobre,trás'.split(',')
     tmp = []
     while len(lst) != 0:
         word = lst.pop()
         flg = True
-        for prep in paltries:
+        for prep in prep_list:
             if prep == word:
                 flg = False
         if flg:
@@ -46,7 +47,7 @@ def del_prepositions(lst) -> list:
 def compare_cells(cell_1, cell_2) -> int:
     """
         >>> CELL_1 = 'qual e a condição da caixa de estepe'
-        >>> CELL_2 = 'qual e a condicao da caixa de estepe'
+        >>> CELL_2 = 'qual e ante condicao da caixa de estepe'
         >>> compare_cells(CELL_1, CELL_2)
         100.0
     """
