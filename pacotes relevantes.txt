@@ -1,2 +1,10 @@
+easy_install pip  
+pip install BeautifulSoup4
+	 https://medium.freecodecamp.org/how-to-scrape-websites-with-python-and-beautifulsoup-5946935d93fe
+
+
 pip install pyinstaller
 	pyinstaller myscript.py
+
+
+Material Theme UI 
