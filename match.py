@@ -5,6 +5,11 @@ from unidecode import unidecode
 
 
 def clean_str(my_str):
+    """
+    Purifies a string of any accents and/or marks.
+    :param my_str: string to be purged
+    :return: my cleansed string
+    """
     if isinstance(my_str, bool):
         if my_str:
             my_str = 'TRUE'
@@ -27,11 +32,17 @@ def clean_str(my_str):
 
 def del_prepositions(lst) -> list:
     """
+    Deletes any preposition in a list of words, returning the cleaned list.
+    This is a mutating function, so beware that the input will be corrupted.
+    :param lst:
+    :return:
+    """
+    """
         >>> del_prepositions(['a','porque','per','jamais'])
         ['porque', 'jamais']
     """
     prep_list = 'a,ante,após,até,com,contra,de,desde,em,entre,para,perante,' \
-                'por,sem,sob,sobre,trás'.split(',')
+                'por,sem,sob,sobre,trás,da,do'.split(',')
     tmp = []
     while len(lst) != 0:
         word = lst.pop()
@@ -46,6 +57,10 @@ def del_prepositions(lst) -> list:
 
 def compare_cells(cell_1, cell_2) -> int:
     """
+    Compares 2 sets of words.
+    :param cell_1: first set of words separated by spaces
+    :param cell_2: second set of words separated by spaces
+    :return: their likelihood
         >>> CELL_1 = 'qual e a condição da caixa de estepe'
         >>> CELL_2 = 'qual e ante condicao da caixa de estepe'
         >>> compare_cells(CELL_1, CELL_2)
@@ -65,3 +80,19 @@ def compare_cells(cell_1, cell_2) -> int:
             if clean_str(word_1) == clean_str(word_2):
                 match += 1
     return match / total * 100
+
+
+def compare_lists(lst1, lst2) -> (list, list, list):
+    """
+    Compares 2 same-sized sets of sets of words, returning a match-ordered list
+    and an extra list containing the likelihood of each set.
+    :param lst1: first list of sets of words
+    :param lst2: second list of sets of words
+    :return: a tuple containing the 3 lists mentioned on the description.
+        >>> lst1 = ["a vaca do vizinho", "parou de assoviar","e começou a mentir" ]
+        >>> lst2 = ["a vaca da vizinha", "parou de assoviar","e não fala mais"]
+        >>> lst1, lst2, lst3 = compare_lists(lst1, lst2)
+        []
+    """
+
+
