@@ -90,9 +90,32 @@ def compare_lists(lst1, lst2) -> (list, list, list):
     :param lst2: second list of sets of words
     :return: a tuple containing the 3 lists mentioned on the description.
         >>> lst1 = ["a vaca do vizinho", "parou de assoviar","e começou a mentir" ]
-        >>> lst2 = ["a vaca da vizinha", "parou de assoviar","e não fala mais"]
+        >>> lst2 = ["parou de assoviar", "e não fala mais", "a vaca da vizinha"]
         >>> lst1, lst2, lst3 = compare_lists(lst1, lst2)
-        []
+        >>> print(lst1)
+        ['a vaca do vizinho', 'parou de assoviar', 'e começou a mentir']
+        >>> print(lst2)
+        ['a vaca da vizinha', 'parou de assoviar', 'e não fala mais']
+        >>> print(lst3)
+        [50.0, 100.0, 33.33333333333333]
     """
+    out2 = []
+    out3 = []
+    for set_of_words in lst1:
+        most_similar = -1   #sentinela
+        likelihood = 0
+        for index in range(len(lst2)):
+            likelihood_tmp = compare_cells(set_of_words, lst2[index])
+            if likelihood_tmp > likelihood:
+                likelihood = likelihood_tmp
+                most_similar = index
+        # we shall remove the most similar item from the compared list, so it
+        # doesn't match with any other item in list A.
+        out2.append(lst2.pop(most_similar))
+        out3.append(likelihood)
+    return lst1, out2, out3
+
+
+
 
 
