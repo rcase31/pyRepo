@@ -34,10 +34,8 @@ def del_prepositions(lst) -> list:
     """
     Deletes any preposition in a list of words, returning the cleaned list.
     This is a mutating function, so beware that the input will be corrupted.
-    :param lst:
-    :return:
-    """
-    """
+    :param lst: a set of .
+    :return: a set of words, without any preposition.
         >>> del_prepositions(['a','porque','per','jamais'])
         ['porque', 'jamais']
     """
@@ -82,20 +80,21 @@ def compare_cells(cell_1, cell_2) -> int:
     return match / total * 100
 
 
-def compare_lists(lst1, lst2) -> (list, list, list):
+def compare_lists(lst1, lst2, likelihood_threshold = 0) -> (list, list, list):
     """
     Compares 2 same-sized sets of sets of words, returning a match-ordered list
     and an extra list containing the likelihood of each set.
-    :param lst1: first list of sets of words
-    :param lst2: second list of sets of words
+    :param lst1: first list of sets of words.
+    :param lst2: second list of sets of words.
+    :param likelihood_threshold: lower acceptable limit of likelihood for output.
     :return: a tuple containing the 3 lists mentioned on the description.
         >>> lst1 = ["a vaca do vizinho", "parou de assoviar","e começou a mentir" ]
         >>> lst2 = ["parou de assoviar", "e não fala mais", "a vaca da vizinha"]
-        >>> lst1, lst2, lst3 = compare_lists(lst1, lst2)
+        >>> lst1, lst2, lst3 = compare_lists(lst1, lst2, 40)
         >>> print(lst1)
         ['a vaca do vizinho', 'parou de assoviar', 'e começou a mentir']
         >>> print(lst2)
-        ['a vaca da vizinha', 'parou de assoviar', 'e não fala mais']
+        ['a vaca da vizinha', 'parou de assoviar', None]
         >>> print(lst3)
         [50.0, 100.0, 33.33333333333333]
     """
@@ -111,8 +110,12 @@ def compare_lists(lst1, lst2) -> (list, list, list):
                 most_similar = index
         # we shall remove the most similar item from the compared list, so it
         # doesn't match with any other item in list A.
-        out2.append(lst2.pop(most_similar))
-        out3.append(likelihood)
+        if likelihood >= likelihood_threshold:
+            out2.append(lst2.pop(most_similar))
+            out3.append(likelihood)
+        else:
+            out2.append(None)
+            out3.append(likelihood)
     return lst1, out2, out3
 
 
