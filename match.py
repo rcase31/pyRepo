@@ -22,7 +22,8 @@ def clean_str(my_str):
     my_str = my_str.lower()
     my_str = my_str.replace("  ", " ").strip()
     my_str = unidecode(my_str)
-
+    my_str = my_str.replace('\u0001', 'a')
+    my_str = my_str.replace('-', '')
     my_str = re.sub(r'\001', '', my_str)
     my_str = re.sub(r"[^A-Za-z0-9///' ]", '', my_str)
     my_str = my_str.replace("  ", " ").strip()
@@ -40,7 +41,7 @@ def del_prepositions(lst) -> list:
         ['porque', 'jamais']
     """
     prep_list = 'a,ante,após,até,com,contra,de,desde,em,entre,para,perante,' \
-                'por,sem,sob,sobre,trás,da,do'.split(',')
+                'por,sem,sob,sobre,trás,da,do,o,a,os,as,qual,e'.split(',')
     tmp = []
     while len(lst) != 0:
         word = lst.pop()
@@ -71,7 +72,9 @@ def compare_cells(cell_1, cell_2) -> int:
     cell_2 = cell_2.split(' ')
     cell_2 = del_prepositions(cell_2)
 
-    total = len(cell_1)
+    # We consider the maximum length among both cells to use as reference for
+    # percentage on likelihood calculation.
+    total = max(len(cell_1), len(cell_2))
     match = 0
     for word_1 in cell_1:
         for word_2 in cell_2:
@@ -80,7 +83,7 @@ def compare_cells(cell_1, cell_2) -> int:
     return match / total * 100
 
 
-def compare_lists(lst1, lst2, likelihood_threshold = 0) -> (list, list, list):
+def compare_lists(lst1, lst2, likelihood_threshold=0) -> (list, list, list):
     """
     Compares 2 same-sized sets of sets of words, returning a match-ordered list
     and an extra list containing the likelihood of each set.
@@ -89,7 +92,7 @@ def compare_lists(lst1, lst2, likelihood_threshold = 0) -> (list, list, list):
     :param likelihood_threshold: lower acceptable limit of likelihood for output.
     :return: a tuple containing the 3 lists mentioned on the description.
         >>> lst1 = ["a vaca do vizinho", "parou de assoviar","e começou a mentir" ]
-        >>> lst2 = ["parou de assoviar", "e não fala mais", "a vaca da vizinha"]
+        >>> lst2 = ["parou de assoviar", "e não fala mais", "a vaca da vizinha", "asasasa sasas asdkjds", "blalsalsa blaslasla"]
         >>> lst1, lst2, lst3 = compare_lists(lst1, lst2, 40)
         >>> print(lst1)
         ['a vaca do vizinho', 'parou de assoviar', 'e começou a mentir']
@@ -101,7 +104,7 @@ def compare_lists(lst1, lst2, likelihood_threshold = 0) -> (list, list, list):
     out2 = []
     out3 = []
     for set_of_words in lst1:
-        most_similar = -1   #sentinela
+        most_similar = -1  # sentinela
         likelihood = 0
         for index in range(len(lst2)):
             likelihood_tmp = compare_cells(set_of_words, lst2[index])
@@ -117,8 +120,3 @@ def compare_lists(lst1, lst2, likelihood_threshold = 0) -> (list, list, list):
             out2.append(None)
             out3.append(likelihood)
     return lst1, out2, out3
-
-
-
-
-

@@ -29,4 +29,8 @@ class MyCSVManager:
         with open(self.working_directory + file_name + '.csv', mode='w') as \
                 out_file:
             for line in self.all_lines:
-                out_file.write(self.delimiter.join(line))
+                for elem_index in range(len(line)):
+                    if not isinstance(line[elem_index], str):
+                        line[elem_index] = str(line[elem_index])
+                out_file.write(';'.join(line) + '\n')
+
