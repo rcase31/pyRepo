@@ -1,10 +1,15 @@
-easy_install pip  
+easy_install pip
 pip install BeautifulSoup4
+    for data scrapping from websites
 	 https://medium.freecodecamp.org/how-to-scrape-websites-with-python-and-beautifulsoup-5946935d93fe
-
 
 pip install pyinstaller
 	pyinstaller myscript.py
 
+pip install pandas
+    one may use .isin() method for filtering
 
-Material Theme UI 
+pip install openpyxl
+    it is used to manage Excel workbooks
+
+Material Theme UI
