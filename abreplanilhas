@@ -1,0 +1,81 @@
+import openpyxl
+import pandas as pd
+import glob
+
+from openpyxl import load_workbook
+
+COLUNAS = ['POTÊNCIA ATIVA UG01', 'VAZÃO TURBINADA UG1 m³/s', 'POTÊNCIA ATIVA UG02',
+           'VAZÃO TURBINADA UG2 m³/s', 'POTÊNCIA ATIVA UG03', 'VAZÃO TURBINADA UG3 m³/s']
+CAMINHO = 'C:\\Users\\rafaell.casella\\*\\*\\*\\Contro*'
+
+ABAS = ["{:02d}".format(i) for i in range(1, 32)]
+
+def acha_plan():
+    return glob.glob(CAMINHO)
+
+
+def abre_plan(nome_arquivo):
+
+    wb = load_workbook(filename=nome_arquivo, read_only=True, data_only=True)
+
+    all_sheets = []
+
+    for sheet in ABAS:
+        try:
+            ws = wb[sheet]
+            # Read the cell values into a list of lists
+            data_rows = []
+            for row in ws['A1':'Z100']:
+                for cell in row:
+                    if cell.value == COLUNAS[0]:
+                        primeira = cell.coordinate
+                    if cell.value in COLUNAS:
+                        ultima = cell.column_letter + str(100)
+
+            for row in ws[primeira:ultima]:
+                data_cols = []
+                for cell in row:
+                    data_cols.append(cell.value)
+                data_rows.append(data_cols)
+
+            # Transform into dataframe
+
+            plan = pd.DataFrame(data_rows)
+            plan.columns = plan.iloc[0]
+            plan = plan.drop([0, 1])
+            ws = {'nome': nome_arquivo + '--' + sheet,
+                'dados': plan}
+            all_sheets.append(ws)
+        except:
+            pass
+
+    return all_sheets
+
+
+def abre_todas():
+    plans = []
+    arquivos = acha_plan()
+    for arquivo in arquivos:
+        plan = abre_plan(arquivo)
+
+        plans.extend(plan)
+    for plan in plans:
+        dados = plan['dados']
+        for col in COLUNAS:
+            try:
+                plan[col + ' [Média]'] = dados[col].mean()
+                plan[col + ' [Soma]'] = dados[col].sum()
+            except:
+                pass
+        plan['dados'] = ''
+        nome = plan['nome'].split('\\')
+        plan['dia'] = nome.pop().split('--').pop()
+        plan['mês'] = nome.pop()
+        plan['ano'] = nome.pop()
+        plan['nome'] = ''
+    #pd.DataFrame(plans).to_csv('saida.csv', sep=',',columns=COLUNAS.append('nome'))
+
+    pd.DataFrame(plans).to_html('saida.html', columns=COLUNAS.append('nome'))
+    pd.DataFrame(plans).to_excel('saida.xlsx', columns=COLUNAS.append('nome'))
+
+abre_todas()
